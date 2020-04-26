@@ -1,95 +1,39 @@
-"NeoBundleの設定"{{{
-    if has('vim_starting')
-      set nocompatible
-      set runtimepath+=~/.vim/bundle/neobundle.vim/
-    endif
+set encoding=utf-8
+scriptencoding utf-8
+set fileencoding=utf-8 " 保存時の文字コード
+set fileencodings=ucs-boms,utf-8,euc-jp,cp932 " 読み込み時の文字コードの自動判別. 左側が優先される
+set fileformats=unix,dos,mac " 改行コードの自動判別. 左側が優先される
+set ambiwidth=double " □や○文字が崩れる問題を解決
 
-    call neobundle#begin(expand('~/.vim/bundle/'))
+" Plugins
+call plug#begin()
 
-    NeoBundleFetch 'Shougo/neobundle.vim'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-fugitive' "Git連携
+Plug 'junegunn/gv.vim' "Gitビューワー
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'ryanoasis/vim-devicons'
+Plug 'ryanoasis/nerd-fonts'
+Plug 'vim-jp/vimdoc-ja' "日本語ヘルプ
+Plug 'markonm/traces.vim' "検索や置換コマンドのリアルタイムプレビュー
+Plug 'terryma/vim-multiple-cursors' "マルチカーソル機能
+Plug 'junegunn/fzf' "あいまい検索(コマンド)
+Plug 'junegunn/fzf.vim' "あいまい検索
 
-    "Unite
-    NeoBundle 'Shougo/unite.vim'
-    NeoBundle 'Shougo/neomru.vim'
-    NeoBundle 'Shougo/unite-outline'
-    NeoBundle 'ujihisa/unite-colorscheme'
-    "ファイラー
-    NeoBundle 'Shougo/vimfiler.vim'
-    "カラースキーマ
-    NeoBundle 'altercation/vim-colors-solarized'
-    NeoBundle 'croaker/mustang-vim'
-    NeoBundle 'nanotech/jellybeans.vim'
-    NeoBundle 'tomasr/molokai'
-    NeoBundle 'w0ng/vim-hybrid'
-    NeoBundle 'sickill/vim-monokai'
-    "テキストオブジェクトをもっと便利に
-    NeoBundle 'tpope/vim-surround'
-    NeoBundle 'kana/vim-textobj-user'
-    NeoBundle 'akiyan/vim-textobj-php'
-    NeoBundle 'osyo-manga/vim-textobj-multiblock'
-    NeoBundle 'kana/vim-textobj-function'
-    NeoBundle 'thinca/vim-textobj-comment'
-    "Emmetプラグイン
-    NeoBundle 'mattn/emmet-vim'
-    "JSON表示用プラグイン
-    NeoBundle 'elzr/vim-json'
-    "コメントアウト
-    NeoBundle 'tyru/caw.vim'
-    "ステータスラインのカスタマイズ
-    NeoBundle 'itchyny/lightline.vim'
-    "カーソル移動拡張
-    NeoBundle 'rhysd/clever-f.vim'
-    NeoBundle 'rhysd/accelerated-jk'
-    NeoBundle 'Lokaltog/vim-easymotion'
-    "選択領域の移動
-    NeoBundle 't9md/vim-textmanip'
-    "コマンドを素早く実行
-    NeoBundle 'thinca/vim-quickrun'
-    "ブラウザを素早く開く
-    NeoBundle 'tyru/open-browser.vim'
-    "整列プラグイン
-    NeoBundle 'junegunn/vim-easy-align'
-    "対応する括弧を自動で挿入
-    NeoBundle 'jiangmiao/auto-pairs'
-    "Vimを1つのインスタンスで使う
-    NeoBundle 'thinca/vim-singleton'
-    "テンプレート管理
-    NeoBundle 'mattn/sonictemplate-vim'
-    "editorconfig
-    "NeoBundle 'editorconfig/editorconfig-vim'
-    "カレンダー
-    NeoBundle 'itchyny/calendar.vim'
-    "バッファをサムネイルで選択
-    NeoBundle 'itchyny/thumbnail.vim'
-    "Git
-    NeoBundle 'tpope/vim-fugitive'
-    "個人プラグイン
-    NeoBundle 'knt45/jq-wrapper.vim'
-    NeoBundle 'knt45/my-vimtoggle'
-    "markdown
-    NeoBundle 'plasticboy/vim-markdown'
-    NeoBundle 'kannokanno/previm'
+call plug#end()
 
-    call neobundle#end()
-
-    filetype plugin indent on
-
-    NeoBundleCheck
-"}}}
-
-"vim-singletonの設定"{{{
-    "call singleton#enable()
-"}}}
-"pre-vimの設定"{{{
-    au BufRead,BufNewFile *.md set filetype=markdown
-    let g:previm_open_cmd = 'open -a Firefox'
-"}}}
-
+" My Settings
 "各種設定"{{{
-    "シンタックスハイライトを有効にする
-    syntax on
+    "シンタックスチェックをONにする
+    syntax enable
     "モードラインをONにする
     set modeline
+    " 公式サイトではLinuxとmacOSの設定が若干異なるが、Linuxの設定でもmacOSで問題なし
+    set guifont=Hack\ Nerd\ Font\ 12
     "メニューバーを非表示にする
     set guioptions-=m
     "ツールバーを非表示にする
@@ -144,45 +88,15 @@
     set encoding=utf8
     "常にタブラインを表示
     set showtabline=2
-"}}}
-
-"autocmdの設定{{{
-    autocmd BufEnter * silent! lcd %:p:h
-"}}}
-
-"Tab設定{{{
-    " Anywhere SID.
-    function! s:SID_PREFIX()
-      return matchstr(expand('<sfile>'), '<SNR>\d\+_\zeSID_PREFIX$')
-    endfunction
-
-    " Set tabline.
-    function! s:my_tabline()  "{{{
-      let s = ''
-      for i in range(1, tabpagenr('$'))
-        let bufnrs = tabpagebuflist(i)
-        let bufnr = bufnrs[tabpagewinnr(i) - 1]  " first window, first appears
-        let no = i  " display 0-origin tabpagenr.
-        let mod = getbufvar(bufnr, '&modified') ? '!' : ' '
-        let title = fnamemodify(bufname(bufnr), ':t')
-        let title = '[' . title . ']'
-        let s .= '%'.i.'T'
-        let s .= '%#' . (i == tabpagenr() ? 'TabLineSel' : 'TabLine') . '#'
-        let s .= no . ':' . title
-        let s .= mod
-        let s .= '%#TabLineFill# '
-      endfor
-      let s .= '%#TabLineFill#%T%=%#TabLine#'
-      return s
-    endfunction "}}}
-    let &tabline = '%!'. s:SID_PREFIX() . 'my_tabline()'
+    "ヘルプの言語を日本語にする
+    set helplang=ja
 "}}}
 
 "キーマッピング"{{{
     "-----------------------------------------------------------------------------------"
     " Mappings                                                                          |
     "-----------------------------------------------------------------------------------"
-    " コマンド        | ノーマル | 挿入 | コマンドライン | ビジュアル | 選択 | 演算待ち |
+    " コマンド         | ノーマル | 挿入 | コマンドライン | ビジュアル | 選択 | 演算待ち |
     " map  / noremap  |    @     |  -   |       -        |     @      |  @   |    @     |
     " nmap / nnoremap |    @     |  -   |       -        |     -      |  -   |    -     |
     " vmap / vnoremap |    -     |  -   |       -        |     @      |  @   |    -     |
@@ -194,17 +108,26 @@
     " cmap / cnoremap |    -     |  -   |       @        |     -      |  -   |    -     |
     "-----------------------------------------------------------------------------------"
 
+    "<Leader>キーをデフォルトの\から<Space>に変更する
+    let mapleader = "\<Space>"
+    "全選択する
+    nnoremap <Leader>a ggVG
+    "vimrcと編集、保存、読み込み
+    nnoremap <Leader>v :e $MYVIMRC<CR>
+    nnoremap <Leader>r :source $MYVIMRC<CR>
+    nnoremap <Leader>p "+p
+    nnoremap <Leader>P "+P
+    vnoremap <Leader>y "+y
+    vnoremap <Leader>p "+p
+    vnoremap <Leader>P "+P
+
+    " 常にvery magicオプションで検索
+    nnoremap /  /\v
     "x キー削除でデフォルトレジスタに入れない
     nnoremap x "_x
     vnoremap x "_x
     "コンマの後に自動的にスペースを挿入
     inoremap , ,<Space>
-    "履歴検索
-    "nnoremap : q:a
-    "nnoremap / q/a
-    "nnoremap ? q?a
-    "行末への移動
-    nnoremap <C-\> $
     "縦方向は論理移動する
     noremap j gj
     noremap k gk
@@ -216,8 +139,15 @@
     "左右の矢印キーでバッファを移動
     nnoremap <M-LEFT> :bp<CR>
     nnoremap <M-RIGHT> :bn<CR>
-    "全選択する
-    nnoremap <Leader>a ggVG
+    "ハイライトを消す
+    nnoremap <Esc> :nohlsearch<CR>
+    "ENTERキーでカーソル行の真下に空行を追加
+    nnoremap <CR> o<ESC>
+    "QuickFixウィンドウ
+    nnoremap [q :cprevious<CR>   " 前へ
+    nnoremap ]q :cnext<CR>       " 次へ
+    nnoremap [Q :<C-u>cfirst<CR> " 最初へ
+    nnoremap ]Q :<C-u>clast<CR>  " 最後へ
 
     " The prefix key.
     nnoremap  [Tag]   <Nop>
@@ -236,226 +166,64 @@
     " tp 前のタブ
     map <silent> [Tag]p :tabprevious<CR>
 
-    "新しいタブを開く
-    "nnoremap <Leader>t :tabnew<CR>
-    "開いているタブを閉じる
-    "nnoremap <Leader>w :tabclose<CR>
     "インデント後に再選択
     vnoremap < <gv
     vnoremap > >gv
-    "vimrcとgvimrcの編集、保存、読み込み
-    nnoremap <Leader>v :e $MYVIMRC<CR>
-    nnoremap <Leader>g :e $MYGVIMRC<CR>
-    nnoremap <Leader>s :up $MYVIMRC<Bar>:up $MYGVIMRC<BAR>:source $MYVIMRC<BAR>:source $MYGVIMRC<CR>
-    "ハイライトを消す
-    nnoremap <Esc> :nohlsearch<CR>
-    "ENTERキーでカーソル行の真下に空行を追加
-    nnoremap <CR> o<ESC>
+
     " insertモードから抜ける
     inoremap <silent> jj <ESC>
     inoremap <silent> <C-j> j
-    inoremap <silent> kk <ESC>
-    inoremap <silent> <C-k> k
-
-    " 行頭・行末移動方向をキーの相対位置にあわせる
-    "nnoremap 0 $ 
-    "nnoremap 1 0 
-
-    " 挿入モードでのカーソル移動
-    inoremap <C-j> <Down>
-    inoremap <C-k> <Up>
-    inoremap <C-h> <Left>
-    inoremap <C-l> <Right>
-
+    " 挿入モードでのカーソル移動をBash風に
+    " inoremap <C-a> 0  
+    " inoremap <C-e> $  
+    " inoremap <C-f> <Left>
+    " inoremap <C-b> <Right>
+    " inoremap <C-h> <BS>
+    " inoremap <C-d> <Del>
     " カーソル前の文字削除
-    inoremap <silent> <C-h> <C-g>u<C-h>
+    " inoremap <silent> <C-h> <C-g>u<C-h>
+    "inoremap <C-h> <BS>
     " カーソル後の文字削除
-    inoremap <silent> <C-d> <Del>
+    "inoremap <silent> <C-d> <Del>
+    "inoremap <C-d> <Del>
     " カーソルから行頭まで削除
-    inoremap <silent> <C-d>e <Esc>lc^
+    "inoremap <silent> <C-d>e <Esc>lc^
     " カーソルから行末まで削除
-    inoremap <silent> <C-d>0 <Esc>lc$
+    "inoremap <silent> <C-d>0 <Esc>lc$
     " カーソルから行頭までヤンク
-    inoremap <silent> <C-y>e <Esc>ly0<Insert>
+    "inoremap <silent> <C-y>e <Esc>ly0<Insert>
     " カーソルから行末までヤンク
-    inoremap <silent> <C-y>0 <Esc>ly$<Insert>
+    "inoremap <silent> <C-y>0 <Esc>ly$<Insert>
 
-    " 引用符, 括弧の設定
-    inoremap { {}<Left>
-    inoremap [ []<Left>
-    inoremap ( ()<Left>
-    inoremap " ""<Left>
-    inoremap ' ''<Left>
-    inoremap <> <><Left>
-"}}}
-
-"open_browser.vimの設定"{{{
-let g:netrw_nogx = 1
-nmap gx (openbrowser-smart-search)
-vmap gx (openbrowser-smart-search)
-
-if has('win32') || has('win64')
- let g:openbrowser_browser_commands = [
- \   {
- \       "name": "C:\\Program\ Files\ (x86)\\Google\\Chrome\\Application\\chrome.exe",
- \       "args": ["{browser}", "{uri}"]
- \   }
- \ ]
-endif
-"}}}
-
-"caw.vimの設定"{{{
-    "Ctrl+cでコメントアウトのON/OFF
-    xmap <C-c> <Plug>(caw:i:toggle)
-    nmap <C-c> <Plug>(caw:i:toggle)
-"}}}
-
-"accelerated-jkの設定"{{{
-    nmap j <Plug>(accelerated_jk_gj)
-    nmap k <Plug>(accelerated_jk_gk)
-"}}}
-
-"vim-easy-alignの設定"{{{
-    vmap <Enter> <Plug>(EasyAlign)
-"}}}
-
-"vim-textmanjpの設定"{{{
-    "複製の設定
-    xmap <C-S-DOWN> <Plug>(textmanip-duplicate-down)
-    nmap <C-S-DOWN> <Plug>(textmanip-duplicate-down)
-    "移動の設定
-    xmap <M-S-DOWN> <Plug>(textmanip-move-down)
-    xmap <M-S-UP> <Plug>(textmanip-move-up)
-    xmap <M-S-LEFT> <Plug>(textmanip-move-left)
-    xmap <M-S-RIGHT> <Plug>(textmanip-move-right)
-"}}}
-
-"open-browser.vimの設定"{{{
-    nmap <Leader>q <Plug>(openbrowser-smart-search)
-    vmap <Leader>q <Plug>(openbrowser-smart-search)
-"}}}
-
-"vim-textobj-multiblock.vimの設定"{{{
-    omap ab <Plug>(textobj-multiblock-a)
-    omap ib <Plug>(textobj-multiblock-i)
-    vmap ab <Plug>(textobj-multiblock-a)
-    vmap ib <Plug>(textobj-multiblock-i)
-"}}}
-
-"vim-easymotionの設定"{{{
-    "General Configuration
-    let g:EasyMotion_do_mapping = 0
-    let g:EasyMotion_enter_jump_first = 1
-    let g:EasyMotion_space_jump_first = 1
-
-    "Find Motions
-    nmap s <Plug>(easymotion-s2)
-    xmap s <Plug>(easymotion-s2)
-    omap x <Plug>(easymotion-s2)
-    let g:EasyMotion_smartcase = 1
-
-    "Line Motions
-    map <Space>j <Plug>(easymotion-j)
-    map <Space>k <Plug>(easymotion-k)
-    let g:EasyMotion_startofline = 0
-
-    "Search Motions
-    "`<Tab>` & `<S-Tab>` to scroll up/down a page with next match
-    nmap g/ <Plug>(easymotion-sn)
-    xmap g/ <Plug>(easymotion-sn)
-    omap g/ <Plug>(easymotion-tn)
-"}}}
-
-"unite.vimの設定 {{{
-    "インサートモードで開始
-    let g:unite_enable_start_insert = 1
-    "ヒストリー/ヤンク機能を有効化
-    let g:unite_source_history_yank_enable =1
-    "file_recのキャッシュの最小値/最大値を設定
-    let g:unite_source_rec_min_cache_files = 100
-    let g:unite_source_rec_max_cache_files = 5000
-    "prefix keyの設定
-    nmap <Space> [unite]
-
-    "スペースキーとsキーでVimShellを起動
-    nnoremap <silent> [unite]a :<C-u>UniteWithBufferDir -buffer-name=files file<CR>
-    "スペースキーとfキーでバッファと最近開いたファイル一覧を表示
-    nnoremap <silent> [unite]f :<C-u>Unite<Space>buffer file_mru<CR>
-    "スペースキーとdキーで最近開いたディレクトリを表示
-    nnoremap <silent> [unite]d :<C-u>Unite<Space>directory_mru<CR>
-    "スペースキーとhキーでヒストリ/ヤンクを表示
-    nnoremap <silent> [unite]h :<C-u>Unite<Space>history/yank<CR>
-    "スペースキーとtキーでタブを表示
-    nnoremap <silent> [unite]t :<C-u>Unite<Space>tab<CR>
-    "スペースキーとoキーでoutline
-    nnoremap <silent> [unite]o :<C-u>Unite<Space>outline<CR>
-    "スペースキーとcキーでcolorscheme
-    nnoremap <silent> [unite]c :<C-u>Unite<Space>colorscheme -auto-preview<CR>
-    "スペースキーとENTERキーでfile_rec:!
-    nnoremap <silent> [unite]<CR> :<C-u>Unite<Space>file_rec:!<CR>
-    "unite.vimを開いている間のキーマッピング
-    autocmd FileType unite call s:unite_my_settings()
-    function! s:unite_my_settings()"{{{
-        " ESCでuniteを終了
-        nmap <buffer> <ESC> <Plug>(unite_exit)
-    endfunction"}}}
-"}}}
-
-"vimfiler.vimの設定"{{{
-    "vimデフォルトのエクスプローラをvimfilerで置き換える
-    let g:vimfiler_as_default_explorer = 1
-    "セーフモードを無効にした状態で起動する
-    let g:vimfiler_safe_mode_by_default = 0
-    "自動でカレントディレクトリを移動する
-    let g:vimfiler_enable_auto_cd = 1
-    "NERDTree的な表示
-    nnoremap <Leader>e :VimFilerExplore -split -winwidth=30 -find -no-quit<CR>
-    
-    "現在開いているバッファをIDE風に開く
-    nnoremap <silent> <Leader>z :<C-u>VimFilerBufferDir -split -simple -winwidth=45 -toggle -no-quit<CR>
-"}}}
-
-"calendar.vimの設定"{{{
-    let g:calendar_views = ['year', 'month', 'week', 'clock']
-    nnoremap <Leader>c :Calendar<CR>
-"}}}
-
-"thumbnail.vimの設定"{{{
-    nnoremap <Leader>b :Thumbnail<CR>
-"}}}
-
-"lightline.vimの設定"{{{
-    let g:lightline = {
-            \ 'active': {
-            \   'left': [
-            \     ['mode'],
-            \     ['fugitive', 'filename']
-            \   ]
-            \ },
-            \ 'component_function': {
-            \   'fugitive': 'MyFugitive'
-            \ }
-            \ }
-
-    function! MyFugitive()
-      try
-        if &ft !~? 'vimfiler\|gundo' && exists('*fugitive#head')
-          let _ = fugitive#head()
-          return strlen(_) ? _ : ''
-        endif
-      catch
-      endtry
-      return ''
+    " vp doesn't replace paste buffer
+    function! RestoreRegister()
+        let @" = s:restore_reg
+        return ''
     endfunction
-"}}}
-"Previm.vimの設定"{{{
-    "let g:previm_open_cmd = "open -a GoogleChrome" 
-    augroup PrevimSettings
-        autocmd!
-        autocmd BufNewFile,BufRead *.{md,mdwn,mkd,mkdn,mark*} set filetype=markdown
-    augroup END
+    function! s:Repl()
+        let s:restore_reg = @"
+        return "p@=RestoreRegister()\<cr>"
+    endfunction
+    vmap <silent> <expr> p <sid>Repl()
 "}}}
 
-" vim: foldmethod=marker
-" vim: foldlevel=1
+"NERDTreeの設定"{{{
+    "NERDTreeを開く
+    nnoremap <silent><C-e> :NERDTreeToggle<CR>
+"}}}
 
+"vim-deviconsの設定"{{{
+    " フォルダアイコンを表示
+    let g:WebDevIconsNerdTreeBeforeGlyphPadding = ""
+    let g:WebDevIconsUnicodeDecorateFolderNodes = v:true
+    " after a re-source, fix syntax matching issues (concealing brackets):
+    if exists('g:loaded_webdevicons')
+    call webdevicons#refresh()
+    endif 
+"}}}
+
+
+if has('gui_running')
+    "半透明にする 
+    set transparency=25
+endif
