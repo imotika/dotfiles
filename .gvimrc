@@ -17,4 +17,5 @@ set mouse=a
 "半透明にする 
 "set transparency=25
 
+set guifont=Hack\ Nerd\ Font:h12
 

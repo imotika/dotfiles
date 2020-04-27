@@ -4,6 +4,8 @@ set fileencoding=utf-8 " 保存時の文字コード
 set fileencodings=ucs-boms,utf-8,euc-jp,cp932 " 読み込み時の文字コードの自動判別. 左側が優先される
 set fileformats=unix,dos,mac " 改行コードの自動判別. 左側が優先される
 set ambiwidth=double " □や○文字が崩れる問題を解決
+" filetype plugin on and filetype ident on
+filetype plugin indent on
 
 " Plugins
 call plug#begin()
@@ -11,7 +13,7 @@ call plug#begin()
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
-Plug 'scrooloose/nerdtree'
+Plug 'scrooloose/nerdtree' "左ディレクトリツリー
 Plug 'tpope/vim-fugitive' "Git連携
 Plug 'junegunn/gv.vim' "Gitビューワー
 Plug 'vim-airline/vim-airline'
@@ -23,6 +25,12 @@ Plug 'markonm/traces.vim' "検索や置換コマンドのリアルタイムプ�
 Plug 'terryma/vim-multiple-cursors' "マルチカーソル機能
 Plug 'junegunn/fzf' "あいまい検索(コマンド)
 Plug 'junegunn/fzf.vim' "あいまい検索
+Plug 'w0ng/vim-hybrid' "カラースキーマ(hybrid)
+Plug 'godlygeek/tabular' "テキスト縦方向整形
+Plug 'plasticboy/vim-markdown' "Markdownシンタックス
+Plug 'previm/previm' "Markdownプレビュー
+Plug 'tyru/open-browser.vim' "ブラウザ操作
+Plug 'mattn/vim-maketable' "csv文字列からMarkdown形式のテーブル生成
 
 call plug#end()
 
@@ -30,10 +38,13 @@ call plug#end()
 "各種設定"{{{
     "シンタックスチェックをONにする
     syntax enable
+    "カラースキーマ
+    colorscheme hybrid 
+    set background=dark
     "モードラインをONにする
     set modeline
     " 公式サイトではLinuxとmacOSの設定が若干異なるが、Linuxの設定でもmacOSで問題なし
-    set guifont=Hack\ Nerd\ Font\ 12
+    set guifont=Hack\ Nerd\ Font:h12
     "メニューバーを非表示にする
     set guioptions-=m
     "ツールバーを非表示にする
@@ -212,6 +223,10 @@ call plug#end()
     nnoremap <silent><C-e> :NERDTreeToggle<CR>
 "}}}
 
+"vim-airlineの設定"{{{
+    let g:airline_theme = 'wombat'
+"}}}
+
 "vim-deviconsの設定"{{{
     " フォルダアイコンを表示
     let g:WebDevIconsNerdTreeBeforeGlyphPadding = ""
@@ -222,6 +237,30 @@ call plug#end()
     endif 
 "}}}
 
+"plasticboy/vim-markdownの設定"{{{
+    let g:vim_markdown_folding_disabled = 1
+    let g:vim_markdown_auto_insert_bullets = 0
+    let g:vim_markdown_new_list_item_indent = 0   
+"}}}
+
+"previm/previmの設定{{{
+    autocmd BufRead,BufNewFile *.md set filetype=markdown
+    " リアルタイムプレビュー
+    " 保存時
+    " 挿入モードを抜けた時
+    " ノーマルモードで少しの間(0.5秒くらい)何も押さなかったとき
+    " 挿入モードで少しの間(0.5秒くらい)何も押さなかったとき
+    let g:previm_enable_realtime = 1
+    let g:previm_open_cmd = 'open -a Google\ Chrome'
+    " ctrl pでプレビュー
+    nnoremap <silent> <C-p> :PrevimOpen<CR>
+"}}}
+
+"tyru/open-browser.vimの設定{{{
+    let g:netrw_nogx = 1 " disable netrw's gx mapping.
+    nmap gx <Plug>(openbrowser-smart-search)
+    vmap gx <Plug>(openbrowser-smart-search)
+"}}}
 
 if has('gui_running')
     "半透明にする 
