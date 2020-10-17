@@ -7,29 +7,40 @@ set ambiwidth=double " □や○文字が崩れる問題を解決
 " filetype plugin on and filetype ident on
 filetype plugin indent on
 
+
+
 " Plugins
+"
+" use vim-plug
+" see https://github.com/junegunn/vim-plug
+"
+" Vim:curl -fLo ~/.vim/autoload/plug.vim --create-dirs \
+"    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+"
+" NeoVim: sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+"       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 call plug#begin()
 
 Plug 'Shougo/vimproc.vim', { 'dir': '~/.vim/plugged/vimproc.vim', 'do': 'make' }
-Plug 'easymotion/vim-easymotion'
-Plug 'davidhalter/jedi-vim', { 'for': ['python', 'python3'] }
-Plug 'terryma/vim-expand-region'
 Plug 'bronson/vim-trailing-whitespace'
-Plug 'nathanaelkane/vim-indent-guides'
+Plug 'davidhalter/jedi-vim', { 'for': ['python', 'python3'] }
+Plug 'easymotion/vim-easymotion'
 Plug 'godlygeek/tabular' "テキスト縦方向整形
 Plug 'junegunn/fzf' "あいまい検索(コマンド)
 Plug 'junegunn/fzf.vim' "あいまい検索
 Plug 'junegunn/gv.vim' "Gitビューワー
 Plug 'junegunn/vim-easy-align' "テキスト整列
 Plug 'markonm/traces.vim' "検索や置換コマンドのリアルタイムプレビュー
-Plug 'mattn/vim-starwars'
 Plug 'mattn/emmet-vim' "Emmet
 Plug 'mattn/vim-maketable' "csv文字列からMarkdown形式のテーブル生成
+Plug 'mattn/vim-starwars'
+Plug 'nathanaelkane/vim-indent-guides'
 Plug 'plasticboy/vim-markdown'
 Plug 'previm/previm' "Markdownプレビュー
 Plug 'ryanoasis/nerd-fonts'
 Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdtree'
+Plug 'terryma/vim-expand-region'
 Plug 'terryma/vim-multiple-cursors' "マルチカーソル機能
 Plug 'thinca/vim-quickrun'
 Plug 'tpope/vim-commentary'
@@ -200,8 +211,8 @@ call plug#end()
     inoremap <silent> jj <ESC>
     inoremap <silent> <C-j> j
     " 挿入モードでのカーソル移動をBash風に
-    " inoremap <C-a> 0  
-    " inoremap <C-e> $  
+    " inoremap <C-a> 0
+    " inoremap <C-e> $
     " inoremap <C-f> <Left>
     " inoremap <C-b> <Right>
     " inoremap <C-h> <BS>
@@ -234,7 +245,6 @@ call plug#end()
 "}}}
 
 "thinca/vim-quickrunの設定"{{{
-    
 "}}}
 
 "NERDTreeの設定"{{{
@@ -253,13 +263,13 @@ call plug#end()
     " after a re-source, fix syntax matching issues (concealing brackets):
     if exists('g:loaded_webdevicons')
     call webdevicons#refresh()
-    endif 
+    endif
 "}}}
 
 "plasticboy/vim-markdownの設定"{{{
     let g:vim_markdown_folding_disabled = 1
     let g:vim_markdown_auto_insert_bullets = 0
-    let g:vim_markdown_new_list_item_indent = 0   
+    let g:vim_markdown_new_list_item_indent = 0
 "}}}
 
 "previm/previmの設定{{{
@@ -319,7 +329,7 @@ call plug#end()
     "   let g:jedi#popup_on_dot           = 0 " ドット(.)を入力したとき自動で補完しない
     "   let g:jedi#popup_select_first     = 0 " 補完候補の1番目を選択しない
     "   let g:jedi#show_call_signatures   = 0 " 関数の引数表示を無効(ポップアップのバグを踏んだことがあるため)
-    "   autocmd FileType python,*.py setlocal omnifunc=jedi#completions   " 補完エンジンはjediを使う
+    "   autocmd FileType python setlocal omnifunc=jedi#completions   " 補完エンジンはjediを使う
     " endfunction
 "}}}
 "w0rp/aleの設定{{{
