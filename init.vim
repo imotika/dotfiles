@@ -19,15 +19,16 @@ filetype plugin indent on
 "
 " NeoVim: sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
 "       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+"
 call plug#begin()
 
-Plug 'Shougo/vimproc.vim', { 'dir': '~/.vim/plugged/vimproc.vim', 'do': 'make' }
+Plug 'Shougo/vimproc.vim', { 'do': 'make' }
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'davidhalter/jedi-vim', { 'for': ['python', 'python3'] }
 Plug 'easymotion/vim-easymotion'
 Plug 'godlygeek/tabular' "テキスト縦方向整形
-Plug 'junegunn/fzf' "あいまい検索(コマンド)
-Plug 'junegunn/fzf.vim' "あいまい検索
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'junegunn/gv.vim' "Gitビューワー
 Plug 'junegunn/vim-easy-align' "テキスト整列
 Plug 'markonm/traces.vim' "検索や置換コマンドのリアルタイムプレビュー
@@ -42,7 +43,7 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdtree'
 Plug 'terryma/vim-expand-region'
 Plug 'terryma/vim-multiple-cursors' "マルチカーソル機能
-Plug 'thinca/vim-quickrun'
+Plug 'lambdalisue/vim-quickrun-neovim-job' | Plug 'thinca/vim-quickrun'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-repeat'
@@ -245,6 +246,26 @@ call plug#end()
 "}}}
 
 "thinca/vim-quickrunの設定"{{{
+    " vimprocで非同期実行
+    " 成功時にバッファ、失敗時にQuickFixで表示
+    " 結果表示のサイズ調整など
+    let g:quickrun_config = {
+        \ '_' : {
+            \ 'outputter' : 'error',
+            \ 'outputter/error/success' : 'buffer',
+            \ 'outputter/error/error'   : 'quickfix',
+            \ 'outputter/buffer/split' : ':botright 8sp',
+        \ }
+    \}
+    " VimとNeovimで利用するrunerを変更
+    if has('nvim')
+      let g:quickrun_config._.runner = 'neovim_job'
+    elseif exists('*ch_close_in')
+      let g:quickrun_config._.runner = 'job'
+    endif
+    " 実行時に前回の表示内容をクローズ&保存してから実行
+    let g:quickrun_no_default_key_mappings = 1
+    nmap <Leader><F5> :cclose<CR>:write<CR>:QuickRun -mode n<CR>
 "}}}
 
 "NERDTreeの設定"{{{
